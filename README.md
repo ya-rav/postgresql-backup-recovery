@@ -1,1 +1,1 @@
-# postgres-backup-recovery
+# postgreSQL-backup-recovery
