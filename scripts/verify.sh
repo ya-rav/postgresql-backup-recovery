@@ -163,11 +163,10 @@ run_verification() {
     info "Executing verify.sql against database '$POSTGRES_DB'..."
     echo ""
 
-    docker exec -e PGPASSWORD="$POSTGRES_PASSWORD" "$CONTAINER_NAME" \
+    docker exec -i -e PGPASSWORD="$POSTGRES_PASSWORD" "$CONTAINER_NAME" \
         psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
         -v timestamp="$TIMESTAMP" \
-        -f /scripts/verify.sql \
-        2>&1 | tee -a "$VERIFY_LOG"
+        2>&1 < "$verify_sql" | tee -a "$VERIFY_LOG"
 
     echo ""
     ok "Verification complete. Full output written to: $VERIFY_LOG"
