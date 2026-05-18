@@ -1,0 +1,27 @@
+[Unit]
+Description=PostgreSQL Automated Backup with Integrity Verification
+After=network.target docker.service
+Requires=docker.service
+Wants=backup.timer
+
+[Service]
+Type=oneshot
+User=root
+Group=docker
+WorkingDirectory=/opt/postgres-backup
+EnvironmentFile=/opt/postgres-backup/.env
+
+ExecStartPre=/usr/bin/docker exec postgres_backup_demo pg_isready -U ${POSTGRES_USER}
+ExecStart=/bin/bash /opt/postgres-backup/scripts/backup.sh
+ExecStartPost=/bin/bash /opt/postgres-backup/scripts/verify.sh
+
+StandardOutput=append:/opt/postgres-backup/logs/backup.log
+StandardError=append:/opt/postgres-backup/logs/backup-error.log
+
+RuntimeMaxSec=600
+TimeoutStartSec=300
+
+Restart=on-failure
+RestartSec=30
+
+WantedBy=multi-user.target

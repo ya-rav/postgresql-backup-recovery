@@ -1,0 +1,21 @@
+[Unit]
+Description=Daily PostgreSQL Backup Timer
+Requires=backup.service
+After=multi-user.target
+
+[Timer]
+OnCalendar=daily
+OnCalendar=02:00:00
+
+Persistent=true
+
+RandomizedDelaySec=300
+
+Timezone=Europe/London
+
+AccuracySec=1min
+
+Unit=backup.service
+
+[Install]
+WantedBy=timers.target
